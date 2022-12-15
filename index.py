@@ -8,8 +8,8 @@ class Bank():
     __cpf = []
     def __init__(self, digit):
 
-        
-
+        #Função que cria a Conta Bancaria, Agency e o Codigo de Segurança e impede sua duplicação, também recebe a senha e o cpf.
+        #Essa função tambem verifica se o CPF é valido ou se ja existe no banco de dados.
         def create(index):
             dataX = open("data.txt", "r", encoding="UTF-8")
             dataX = dataX.readlines()
@@ -47,7 +47,7 @@ class Bank():
                         return randomNum
                 
             elif index == 3:
-                
+
                     try:
                         password = int(input("Digite sua senha\n(obs: 5 caracteres):"))
                         while password < 10000 or password > 99999:
@@ -93,9 +93,10 @@ class Bank():
                 
 
         
-        #Tenta fazer a interface grafica
+        #------------------------------------ Criação de Contas -------------------
         if digit == 2:
             
+            #------------------ Entrada de Dados ----------------
             name = str(input("Digite seu Nome: "))
             cpf = create(4)
             account = create(1)
@@ -103,16 +104,16 @@ class Bank():
             password = create(3)
             codeSecurity = create(5)
 
-            #Gera Banco de Dados
+            #--------------- Gera o Banco de Dados E Salva as Informações --------------
             data = open("data.txt", "a", encoding="UTF-8")
             self.__dataString = json.dumps(str(cpf))+ ":" + "{" + '"name"' + ":" + json.dumps(name).lower() + "," + '"account"' + ":" + json.dumps(account) + "," + '"agency"' + ":" + json.dumps(agency) + "," + '"password"' + ":" + json.dumps(password) + "," + '"codeSecurity"' + ":" + json.dumps(codeSecurity) + "," + '"balance"' + ":" + json.dumps(0.0) + "}"+"\n"
             data.write(self.__dataString)
             data.close()
+            
             data = open("data.txt", "r", encoding="UTF-8")
             auxData = data.readlines()
             self.__dataBank = auxData
             newData = "{"
-
             for i in auxData:
                 for j in i:
                     if j == "'" or j == "\n":
@@ -123,6 +124,8 @@ class Bank():
                     newData += j
             
             newData = newData[:-2] + "}"
+
+            #-------------- Apresentação das Informações ---------------
             print("Gerando Dados...\n")
             print(" Sua Conta Bancaria é:", account)
             print(" Sua Agencia é:", agency)
@@ -130,14 +133,21 @@ class Bank():
             input("\nAperte ENTER para continuar >> ")
             os.system('cls') or None
             data.close()
+
+            #------- Função de Login ------------
             self.login()
         else:
-            self.login()    
+            self.login()
+        #-------- Inicio das operações ----------   
         self.operations()
 
     #---------------------------- ENTRAR NA CONTA ---------------------------------
     def login(self):
+
+        #----- Função que autentica cada etapa login, cada dado digitado --------
         def autentication(data, tp):
+            #Estrutura da Funçao:   Caso os dados digitados passem pela autenticação, a função da continuidade e retorna o dado digitado
+            #Caso os dados não passem pela autenticação, o usuario terá 3 tentativas, caso esgotada, o seu acesso será bloqueado e o programa fechará
             i = 0
             if tp == 'name':
                 name = input("Digite seu Nome: ").lower()
@@ -153,6 +163,7 @@ class Bank():
                         else:
                             self.block()
                 return name.lower()
+
             elif tp == 'account': 
                 while True:
                     try:
@@ -259,15 +270,16 @@ class Bank():
                         break
                 return code
 
+        #--------- Acessa o Banco de Dados -----------
         data = open("data.txt", "r", encoding="UTF-8")
-        txt = ""
         i = 0
         txt = data.readlines()
         data.close()
-        
         controlLine = 0 
+
         cpf = str(input("Digite seu CPF: "))
 
+        #------ Pega os dados do banco de dados e formata para JSON --------
         for data in txt:
             auxCpf = ""
             auxIndex = 0
@@ -282,12 +294,13 @@ class Bank():
                     auxIndex += 1
                     
                     break
-            self.__dataComplete.append(json.loads("{"+data+"}"))
-            self.__cpf.append(auxCpf)
-            self.__dataBank.append(json.loads(data[auxIndex+2:]))
+            self.__dataComplete.append(json.loads("{"+data+"}")) #Salva toda a estrutura de dados
+            self.__cpf.append(auxCpf) #Salva apenas o CPF
+            self.__dataBank.append(json.loads(data[auxIndex+2:])) #Salva apenas os dados para operações
             
             
             if str(auxCpf) == cpf:
+                #---------- Caso o CPF seja encontrado, inicia o processo de autenticação
                 dataDict = json.loads(data[auxIndex+2:])
                 self.__accountBank =  {
                 "name": autentication(dataDict, 'name'),
@@ -297,7 +310,9 @@ class Bank():
                 "codeSecurity": autentication(dataDict, 'code') ,
                 "balance": float(dataDict['balance']),
                 }
+                #----------- Se tudo for autenticado, o usuario será levado para sessão de operações -------
             else:
+                #------- Caso não encontre o CPF no banco de dados, retorna uma mensagem e fecha o programa -----
                 controlLine += 1
                 if controlLine == len(txt):
                     print("CPF não encontrado em nosso banco de dados")
@@ -306,6 +321,7 @@ class Bank():
     
     #---------------------------- OPERAÇÕES BANCARIA -------------------------------
 
+    #------------- Função da Sessão de operações bancarias
     def operations(self):
         while True:
             os.system('cls') or None
@@ -339,12 +355,16 @@ class Bank():
             else:
                 pass
         return None
+    #OPERAÇÃO PARA VER SALDO BANCARIO
     def getBankBalance(self):
         os.system('cls') or None
         print("Seu saldo bancario é de R$", self.__accountBank['balance'])
         input("\nAperte ENTER para continuar >> ")
+
     #OPERAÇÃO DE TRANSFERENCIA
-    def tranferencia(self):             
+    def tranferencia(self):
+
+        #Sessão que verifica se conta bancaria digitada para onde o dinheiro vai ser transferido existe           
         while True:
             try:
                 account = int(input("Digite a Conta Bancaria que deseja fazer transferencia >> "))
@@ -376,6 +396,7 @@ class Bank():
             else:
                 break
         while True:
+            #---------------- Sessão de transferencia -------------------------------------------
             try:
                 transfer = float(input("Digite a quantia que deseja transferir >> "))
             except ValueError:
@@ -385,6 +406,7 @@ class Bank():
                 print("Sua Conta saldo insuficiente para fazer a transferencia\nTente Novamente\n!")
                 continue
             else:
+                #Sessão que gera a transferencia bancaria e modifica os saldos
                 self.__accountBank['balance'] -= transfer
                 for index in range(len(self.__dataBank)):
                     if self.__dataBank[index]['account'] == verifyAc[0] and self.__dataBank[index]['agency'] == verifyAg[0]:
@@ -409,6 +431,7 @@ class Bank():
             self.__accountBank["balance"] -= value
         print("Valor Sacado com Sucesso!\n")
         input("\nAperte ENTER para continuar >> ")
+
     #OPERAÇÃO DE DEPOSITO
     def deposit(self):
         while True:
@@ -422,8 +445,10 @@ class Bank():
         self.__accountBank["balance"] += value
         print("Valor Depositado com Sucesso!\n")
         input("\nAperte ENTER para continuar >> ")
+
     #VERIFICAÇÃO DE CONTAS BANCARIAS NO BANCO DE DADOS
     def verify(self, index, tp):
+        #função responsavel por fazer verificações pontuais de dados no bancos de dados
         if tp == "balance":
             if index > self.__accountBank['balance']:
                 return True
@@ -462,7 +487,7 @@ class Bank():
                         continue
             
 
-    #SALVA E ATUALIZA O BANCO DE DADOS    
+    #FORMATA, SALVA E ATUALIZA O BANCO DE DADOS    
     def saving(self):
         for data in range(len(self.__dataBank)):
             if self.__dataBank[data]['name'] == self.__accountBank['name'] and  self.__dataBank[data]['account'] == self.__accountBank['account'] and self.__dataBank[data]['agency'] == self.__accountBank['agency'] and self.__dataBank[data]['codeSecurity'] == self.__accountBank['codeSecurity']:
