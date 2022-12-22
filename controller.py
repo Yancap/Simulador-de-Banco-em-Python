@@ -1,17 +1,35 @@
 from model import BankData
 from dal import BankDal
+import random
+
 class BankController:
     #Fazer as operações de registro e cadastro e a view
-    def __init__(self, operation):
-        if operation == "register":
-            pass
-        elif operation == "login":
-            pass
+    
 
     class Validation:
         def __init__(self):
             self.dataArray = BankDal.loadData()
-            
+            self.attempts = 0
+
+        def create(self, tipo):
+
+            if tipo == "agency":
+                randomNum = random.randint(1000,9999)
+                while self.validationAgency(randomNum) == "exist":
+                    randomNum = random.randint(1000,9999)
+                return randomNum
+
+            elif tipo == "account":
+                randomNum = random.randint(100000,999999)
+                while self.validationAccount(randomNum) == "exist":
+                    randomNum = random.randint(100000,999999)
+                return randomNum
+
+            elif tipo == "code":
+                randomNum = random.randint(1000,9999)
+                while self.validationCode(randomNum) == "exist":
+                    randomNum = random.randint(1000,9999)
+                return randomNum
 
         def validationCpf(self, cpf: str):
             if len(cpf) != 11:
@@ -19,13 +37,13 @@ class BankController:
             for index in self.dataArray[0]:
                 if cpf == index:
                     return "exist"
-            return "nonexistent"
+            return "notexist"
 
         def validationName(self, name: str):
             for index in self.dataArray[1]:
                 if name.lower() == index['name']:
                     return "exist"
-            return "nonexistent"
+            return "notexist"
         @staticmethod
         def validationPassword(password):
             if len(str(password)) != 5:
@@ -38,7 +56,7 @@ class BankController:
             for index in self.dataArray[1]:
                 if account == index['account']:
                     return "exist"
-            return "nonexistent"
+            return "notexist"
 
         def validationAgency(self, agency: int):
             if len(str(agency)) != 4:
@@ -46,7 +64,7 @@ class BankController:
             for index in self.dataArray[1]:
                 if agency == index["agency"]:
                     return "exist"
-            return "nonexistent"
+            return "notexist"
 
         def validationCode(self, code: int):
             if len(str(code)) != 4:
@@ -54,8 +72,22 @@ class BankController:
             for index in self.dataArray[1]:
                 if code == index["codeSecurity"]:
                     return "exist"
-            return "nonexistent"
+            return "notexist"
 
+        def autentication(self, condition):
+            if self.attempts < 3:
+                if condition == "exist":
+                    return "exist"
+                elif condition == "notexist":
+                    self.attempts += 1
+                    return "notexist"
+                elif condition == "invalid":
+                    return "invalid"
+                pass
+            else:
+                print("SEU ACESSO FOI BLOQUEADO!")
+                input("Aperte ENTER para sair >> ")
+                exit()
     class Operations:
         def __init__(self, accountPeople: BankData):
             self.accountPeople = accountPeople
