@@ -1,3 +1,3 @@
-"12345678900":{"name":"mario","account":253035,"agency":1452,"password":12321,"codeSecurity":5353,"balance":90.0}
-"98765432100":{"name":"joao","account":436547,"agency":5804,"password":98765,"codeSecurity":1389,"balance":30.0}
+"12345678900":{"name":"mario","account":253035,"agency":1452,"password":12321,"codeSecurity":5353,"balance":40.0}
+"98765432100":{"name":"joao","account":436547,"agency":5804,"password":98765,"codeSecurity":1389,"balance":50.0}
 

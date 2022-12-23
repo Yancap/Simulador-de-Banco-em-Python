@@ -61,7 +61,7 @@ class BankView:
             if cls.Autentication.autentication(cls.Autentication.validationName(cls.name, "entrace", data)) == "exist":
                 break
             else:
-                print("Nome Inválido!\nVocê possui apenas", 4 - cls.Autentication.attempts,"Tentativas" )
+                print("Nome Inválido!\nVocê possui apenas", 3 - cls.Autentication.attempts,"Tentativas" )
                 cls.name = str(input("Digite o Nome Correto >>"))
             
         cls.password = int(input("Digite Senha >> "))
@@ -69,7 +69,7 @@ class BankView:
             if cls.Autentication.autentication(cls.Autentication.validationPassword(cls.password, "entrace", data)) == "exist":
                 break
             else:
-                print("Senha Inválido!\nVocê possui apenas", 4 - cls.Autentication.attempts,"Tentativas" )
+                print("Senha Inválido!\nVocê possui apenas", 3 - cls.Autentication.attempts,"Tentativas" )
                 cls.password = int(input("Digite a Senha novamente >> "))
 
         cls.code = int(input("Digite seu Código de Segurança >> "))
@@ -77,7 +77,7 @@ class BankView:
             if cls.Autentication.autentication(cls.Autentication.validationCode(cls.code, "entrace", data)) == "exist":
                 break
             else:
-                print("Código de Segurança Inválido!\nVocê possui apenas", 4 - cls.Autentication.attempts,"Tentativas" )
+                print("Código de Segurança Inválido!\nVocê possui apenas", 3 - cls.Autentication.attempts,"Tentativas" )
                 cls.code = int(input("Digite a Código de Segurança novamente >> "))
         
         

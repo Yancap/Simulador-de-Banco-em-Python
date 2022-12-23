@@ -109,7 +109,7 @@ class BankController:
                 return "notexist"
 
         def autentication(self, condition):
-            if self.attempts <= 3:
+            if self.attempts <= 2:
                 if condition == "exist":
                     return "exist"
                 elif condition == "notexist":
