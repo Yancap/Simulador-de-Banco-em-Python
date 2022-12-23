@@ -11,6 +11,10 @@ class BankController:
             self.dataArray = BankDal.loadData()
             self.attempts = 0
 
+        def returnData(self, cpf):
+            for data in self.dataArray[2]:
+                if cpf in data:
+                    return data
         def create(self, tipo):
 
             if tipo == "agency":
@@ -44,11 +48,14 @@ class BankController:
                 if name.lower() == index['name']:
                     return "exist"
             return "notexist"
-        @staticmethod
-        def validationPassword(password):
+        
+        def validationPassword(self, password):
             if len(str(password)) != 5:
                 return "invalid"
-            
+            for index in self.dataArray[1]:
+                if password == index['password']:
+                    return "exist"
+            return "notexist"
 
         def validationAccount(self, account: int):
             if len(str(account)) != 6:
@@ -93,10 +100,10 @@ class BankController:
             self.accountPeople = accountPeople
         def withdraw(self, value):
             if self.accountPeople.balance == 0:
-                return
+                return 'invalid'
             self.accountPeople.balance -= value
             BankDal.saveData(self.accountPeople)
-
+            return 'valid'
         def deposit(self, value):
             self.accountPeople.balance += value
             BankDal.saveData(self.accountPeople)
@@ -117,5 +124,4 @@ class BankController:
             
         def getBankBalance():
             return self.accountPeople.balance   
-valida = BankController.Validation()
-BankController.Operations(BankData("11122233344", "barack", 54321, 129799, 1847, 9620, 1120.0)).transfer(valida, 253035, 1000)
+
