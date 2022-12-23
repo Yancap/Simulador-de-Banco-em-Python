@@ -17,6 +17,7 @@ class BankController:
             for data in self.dataArray[2]:
                 if cpf in data:
                     return json.loads("{"+data+"}")
+
         def create(self, tipo):
 
             if tipo == "agency":
@@ -45,46 +46,70 @@ class BankController:
                     return "exist"
             return "notexist"
 
-        def validationName(self, name: str):
-            for index in self.dataArray[1]:
-                if name.lower() == index['name']:
+        def validationName(self, name: str, tp = "register", data = "none"):
+            if tp == "register":
+                for index in self.dataArray[1]:
+                    if name.lower() == index['name']:
+                        return "exist"
+                return "notexist"
+            else:
+                
+                if name.lower() == data['name']:
                     return "exist"
-            return "notexist"
-        
-        def validationPassword(self, password):
+                return "notexist"
+
+        def validationPassword(self, password, tp = "register", data = "none"):
             if len(str(password)) != 5:
                 return "invalid"
-            for index in self.dataArray[1]:
-                if password == index['password']:
+            if tp == "entrace":
+                
+                if password == data['password']:
                     return "exist"
-            return "notexist"
-
-        def validationAccount(self, account: int):
+                return "notexist"
+            
+        def validationAccount(self, account: int, tp = "register", data = "none"):
             if len(str(account)) != 6:
                 return "invalid"
-            for index in self.dataArray[1]:
-                if account == index['account']:
+            if tp == "register":
+                for index in self.dataArray[1]:
+                    if account == index['account']:
+                        return "exist"
+                return "notexist"
+            else:
+                
+                if account == data['account']:
                     return "exist"
-            return "notexist"
+                return "notexist"
 
-        def validationAgency(self, agency: int):
+        def validationAgency(self, agency: int, tp = "register", data = "none"):
             if len(str(agency)) != 4:
                 return "invalid"
-            for index in self.dataArray[1]:
-                if agency == index["agency"]:
+            if tp == "register":
+                for index in self.dataArray[1]:
+                    if agency == index["agency"]:
+                        return "exist"
+                return "notexist"
+            else:
+                
+                if agency == data["agency"]:
                     return "exist"
-            return "notexist"
+                return "notexist"
 
-        def validationCode(self, code: int):
+        def validationCode(self, code: int, tp = "register", data = "none"):
             if len(str(code)) != 4:
                 return "invalid"
-            for index in self.dataArray[1]:
-                if code == index["codeSecurity"]:
+            if tp == "register":
+                for index in self.dataArray[1]:
+                    if code == index["codeSecurity"]:
+                        return "exist"
+                return "notexist"
+            else:
+                if code == data["codeSecurity"]:
                     return "exist"
-            return "notexist"
+                return "notexist"
 
         def autentication(self, condition):
-            if self.attempts < 3:
+            if self.attempts <= 3:
                 if condition == "exist":
                     return "exist"
                 elif condition == "notexist":

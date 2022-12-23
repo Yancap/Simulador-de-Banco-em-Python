@@ -22,10 +22,10 @@ class BankView:
                 cpf = str(input("Apenas 11 Dígitos inteiros!!!\nDigite um cpf válido >> "))
             elif cls.Autentication.validationCpf(cpf) == "notexist":
                 break
-        password = str(input("Digite sua senha (obs: apenas números inteiros) >> "))
+        password = int(input("Digite sua senha (obs: apenas números inteiros) >> "))
         while True:
             if cls.Autentication.validationPassword(password) == "invalid":
-                password = str(input("Digite uma senha válida >> "))
+                password = int(input("Digite uma senha válida >> "))
             else:
                 break
             
@@ -43,40 +43,41 @@ class BankView:
 
     @classmethod
     def loginIn(cls):
-        #Ajeitar as funções de validação
+
         print("----- ENTRAR EM SUA CONTA -----\n")
         
         cls.cpf = str(input("Digite seu CPF (obs: sem o '-') >> "))
         while True:
             if cls.Autentication.validationCpf(cls.cpf) == "notexist":
-                cls.cpf = str(input("CPF não existe em nossos bancos de dados!!!\nDigite um cpf existente >> "))
+                cls.cpf = str(input("CPF não existe em nossos bancos de dados!!!\nDigite um CPF existente >> "))
             elif cls.Autentication.validationCpf(cls.cpf) == "invalid":
-                cls.cpf = str(input("Apenas 11 Dígitos inteiros!!!\nDigite um cpf válido >> "))
+                cls.cpf = str(input("Apenas 11 Dígitos inteiros!!!\nDigite um CPF válido >> "))
             elif cls.Autentication.validationCpf(cls.cpf) == "exist":
                 break
+        data = cls.Autentication.returnData(cls.cpf)[cls.cpf]
         
         cls.name = str(input("Digite seu Nome >> "))
         while True:
-            if cls.Autentication.autentication(cls.Autentication.validationName(cls.name)) == "exist":
+            if cls.Autentication.autentication(cls.Autentication.validationName(cls.name, "entrace", data)) == "exist":
                 break
-            elif cls.Autentication.autentication(cls.Autentication.validationName(cls.name)) == "notexist":
-                print("Nome Inválido!\nVocê possui apenas", 3 - cls.Autentication.attempts,"Tentativas" )
+            else:
+                print("Nome Inválido!\nVocê possui apenas", 4 - cls.Autentication.attempts,"Tentativas" )
                 cls.name = str(input("Digite o Nome Correto >>"))
             
         cls.password = int(input("Digite Senha >> "))
         while True:
-            if cls.Autentication.autentication(cls.Autentication.validationPassword(cls.password)) == "exist":
+            if cls.Autentication.autentication(cls.Autentication.validationPassword(cls.password, "entrace", data)) == "exist":
                 break
-            elif cls.Autentication.autentication(cls.Autentication.validationPassword(cls.password)) == "notexist":
-                print("Senha Inválido!\nVocê possui apenas", 3 - cls.Autentication.attempts,"Tentativas" )
+            else:
+                print("Senha Inválido!\nVocê possui apenas", 4 - cls.Autentication.attempts,"Tentativas" )
                 cls.password = int(input("Digite a Senha novamente >> "))
 
         cls.code = int(input("Digite seu Código de Segurança >> "))
         while True:
-            if cls.Autentication.autentication(cls.Autentication.validationCode(cls.code)) == "exist":
+            if cls.Autentication.autentication(cls.Autentication.validationCode(cls.code, "entrace", data)) == "exist":
                 break
-            elif cls.Autentication.autentication(cls.Autentication.validationCode(cls.code)) == "notexist":
-                print("Código de Segurança Inválido!\nVocê possui apenas", 3 - cls.Autentication.attempts,"Tentativas" )
+            else:
+                print("Código de Segurança Inválido!\nVocê possui apenas", 4 - cls.Autentication.attempts,"Tentativas" )
                 cls.code = int(input("Digite a Código de Segurança novamente >> "))
         
         
@@ -137,16 +138,7 @@ class BankView:
                         print("Digite apenas números")
                     else:
                         break
-                while True:
-                    try:
-                        peopleAgency = int(input("Digite a Agencia em que deseja realizar a transferência >> "))
-                        if cls.Autentication.validationAgency(peopleAgency) != "exist":
-                            print("Digite uma Agencia Bancaria existente!")
-                            continue
-                    except ValueError:
-                        print("Digite apenas números")
-                    else:
-                        break
+                
 
                 while True:
                     try:
@@ -175,5 +167,4 @@ class BankView:
             else:
                 pass
         return None
-BankView().loginIn()
-BankView().operationsMethod()
+
