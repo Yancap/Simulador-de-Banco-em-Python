@@ -1,6 +1,7 @@
 from model import BankData
 from dal import BankDal
 import random
+import json
 
 class BankController:
     #Fazer as operações de registro e cadastro e a view
@@ -12,9 +13,10 @@ class BankController:
             self.attempts = 0
 
         def returnData(self, cpf):
+            self.dataArray = BankDal.loadData()
             for data in self.dataArray[2]:
                 if cpf in data:
-                    return data
+                    return json.loads("{"+data+"}")
         def create(self, tipo):
 
             if tipo == "agency":
@@ -99,7 +101,7 @@ class BankController:
         def __init__(self, accountPeople: BankData):
             self.accountPeople = accountPeople
         def withdraw(self, value):
-            if self.accountPeople.balance == 0:
+            if value > self.accountPeople.balance:
                 return 'invalid'
             self.accountPeople.balance -= value
             BankDal.saveData(self.accountPeople)
@@ -122,6 +124,6 @@ class BankController:
             BankDal.saveData(self.accountPeople)
             BankDal.saveData(BankData(object.dataArray[0][index],object.dataArray[1][index]["name"],object.dataArray[1][index]["password"], object.dataArray[1][index]["account"],object.dataArray[1][index]["agency"],object.dataArray[1][index]["codeSecurity"],object.dataArray[1][index]["balance"]))
             
-        def getBankBalance():
+        def getBankBalance(self):
             return self.accountPeople.balance   
 
